@@ -5,7 +5,7 @@ from conans import ConanFile, tools, CMake
 
 class rttrConan(ConanFile):
     name = "rttr"
-    version = "0.11-dev"
+    version = "0.9.7-dev"
     license = "MIT License"
     homepage = "https://www.github.com/rttrorg/rttr"
     description = """rttr project"""
@@ -15,11 +15,13 @@ class rttrConan(ConanFile):
 
     settings = "os", "compiler", "build_type", "arch"
     options = {
-        "shared": [True, False], 
+        "shared": [True, False],
+        "rtti": [True, False],
         }
 
     default_options = (
         "shared=True", 
+        "rtti=True", 
     )
 
     scm = {
@@ -33,10 +35,11 @@ class rttrConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
+        cmake.definitions["DBUILD_STATIC"] = not self.options.shared
+        cmake.definitions["BUILD_WITH_RTTI"] = self.options.rtti
         cmake.configure(source_dir='rttr')
         cmake.build()
         cmake.install()
 
     def package_info(self):
-        self.cpp_info.libs = ['rttr_core']
+        self.cpp_info.libs = ["rttr_core_d"] if self.settings.build_type == "Debug" else ["rttr_core"]
