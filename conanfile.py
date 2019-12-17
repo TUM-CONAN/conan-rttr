@@ -7,7 +7,7 @@ class rttrConan(ConanFile):
     name = "rttr"
     version = "0.9.7-dev"
     license = "MIT License"
-    homepage = "https://www.github.com/rttrorg/rttr"
+    homepage = "https://www.github.com/ulricheck/rttr"
     description = """rttr project"""
     url = "https://github.com/ulricheck/conan-rttr"
 
@@ -27,18 +27,26 @@ class rttrConan(ConanFile):
     scm = {
         "type": "git",
         "subfolder": "rttr",
-        "url": "https://github.com/rttrorg/rttr.git",
-        # "revision": "rttrorg-rttr-%s"% version
+        "url": "https://github.com/ulricheck/rttr.git",
         "revision": "master"
-     }
+    }
 
 
-    def build(self):
+
+    def _cmake_configure(self):
         cmake = CMake(self)
         cmake.definitions["DBUILD_STATIC"] = not self.options.shared
         cmake.definitions["BUILD_WITH_RTTI"] = self.options.rtti
         cmake.configure(source_dir='rttr')
+        return cmake
+
+
+    def build(self):
+        cmake = self._cmake_configure()
         cmake.build()
+
+    def package(self):
+        cmake = self._cmake_configure()
         cmake.install()
 
     def package_info(self):
