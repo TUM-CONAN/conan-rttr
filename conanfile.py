@@ -28,14 +28,18 @@ class rttrConan(ConanFile):
         "type": "git",
         "subfolder": "rttr",
         "url": "https://github.com/ulricheck/rttr.git",
-        "revision": "master"
+        "revision": "master",
+        "submodule": "recursive",
     }
 
 
 
     def _cmake_configure(self):
         cmake = CMake(self)
-        cmake.definitions["DBUILD_STATIC"] = not self.options.shared
+        cmake.definitions["BUILD_RTTR_DYNAMIC"] = self.options.shared
+        cmake.definitions["BUILD_STATIC"] = not self.options.shared
+        cmake.definitions["BUILD_UNIT_TESTS"] = 'OFF'
+        cmake.definitions["BUILD_EXAMPLES"] = 'OFF'
         cmake.definitions["BUILD_WITH_RTTI"] = self.options.rtti
         cmake.configure(source_dir='rttr')
         return cmake
