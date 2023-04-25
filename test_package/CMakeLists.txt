@@ -1,12 +1,12 @@
-set(CMAKE_CXX_COMPILER_WORKS 1)
-PROJECT(RTTRExample CXX)
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.15)
+cmake_policy(SET CMP0074 NEW)
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+project(test_package CXX)
+set(CMAKE_VERBOSE_MAKEFILE TRUE)
 
-message("LIBS: ${CONAN_LIBS}")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-ADD_EXECUTABLE(example main.cpp)
-TARGET_LINK_LIBRARIES(example ${CONAN_LIBS})
+find_package(rttr REQUIRED CONFIG)
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} rttr::rttr)
