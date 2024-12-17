@@ -49,7 +49,9 @@ class rttrConan(ConanFile):
         for option, value in self.options.items():
             add_cmake_option(option, value)
 
+        tc.cache_variables["BUILD_RTTR_DYNAMIC"] = self.options.shared
         tc.cache_variables["BUILD_STATIC"] = not self.options.shared
+        #tc.cache_variables["BUILD_WITH_STATIC_RUNTIME_LIBS"] = not self.options.shared
         tc.cache_variables["BUILD_WITH_RTTI"] = self.options.rtti
         tc.cache_variables["BUILD_EXAMPLES"] = False
         tc.cache_variables["BUILD_BENCHMARKS"] = False
